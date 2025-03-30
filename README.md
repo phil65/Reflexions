@@ -30,3 +30,61 @@
 
 [Read the documentation!](https://phil65.github.io/reflexions/)
 
+
+A collection of ready-to-use components for Reflex applications.
+
+## Components
+
+### Icons
+```python
+from reflexions import iconify
+
+# Create an icon with customizable properties
+iconify("mdi:bell", color="blue", size=24)
+iconify("mdi:account", color="red", rotate=90, flip="horizontal")
+```
+
+### Loading Animation
+```python
+from reflexions import loading_icon
+
+# Add a spinning circle loading animation
+loading_icon(stroke="#3182CE", speed="0.75")
+```
+
+### Template Cards
+```python
+from reflexions import cards, TemplateItem
+
+# Create template cards for selection interfaces
+templates = [
+    TemplateItem(
+        icon="mdi:web",
+        title="Website Template",
+        description="Basic website with header and footer",
+        color="blue",
+    ),
+    # Add more templates...
+]
+
+# Create a responsive grid of cards with an optional click handler
+cards(templates, on_click=lambda item: handle_selection(item), cols=3)
+```
+
+### Pydantic Forms
+```python
+from reflexions import pydantic_form
+from pydantic import BaseModel, Field
+
+class UserProfile(BaseModel):
+    name: str = Field(..., description="Your full name")
+    age: int = Field(..., gt=0, description="Your age in years")
+    bio: str | None = Field(None, description="Tell us about yourself")
+
+# Generate a complete form with validation from your model
+form = pydantic_form(
+    UserProfile,
+    on_submit=handle_submission,
+    submit_label="Save Profile",
+)
+```
