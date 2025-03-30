@@ -50,16 +50,16 @@ style = rx.Style(
 )
 
 
-def templates(
+def cards(
     items: list[TemplateItem],
     on_click: Callable[[TemplateItem], Any] | None = None,
     cols: int = 4,
 ) -> rx.Component:
-    """Create a templates section with custom click handling."""
+    """Create a cards section with custom click handling."""
     return rx.box(
         rx.box(
             *[template_card(item, on_click) for item in items],
-            class_name=f"gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-{cols} w-full",
+            class_name=f"gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-{cols} w-full",  # noqa: E501
         ),
         class_name="top-1/3 left-1/2 absolute flex flex-col justify-center items-center gap-10 w-full max-w-4xl transform -translate-x-1/2 -translate-y-1/2 px-6 z-50",  # noqa: E501
         style=style,

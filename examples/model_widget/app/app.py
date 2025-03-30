@@ -5,13 +5,28 @@ from __future__ import annotations
 import reflex as rx
 import reflex_chakra as rc
 
-from reflexions.cards import TemplateItem, templates
+from reflexions.cards import TemplateItem, cards
 from reflexions.iconify import iconify
 
 
 INTRO = """
 # 🤖 Demo-Tool
 """
+
+items = [
+    TemplateItem(
+        icon="message-circle",
+        title="Create a Ticket",
+        description="Create a Jira ticket with priority 'high'",
+        color="grass",
+    ),
+    TemplateItem(
+        icon="calculator",
+        title="Search Tickets",
+        description="Which tickets with priority 'Medium' are in the system?",
+        color="tomato",
+    ),
+]
 
 
 @rx.page(route="/")
@@ -29,22 +44,7 @@ def welcome() -> rx.Component:
         ),
         rc.center(
             iconify("mdi:chat"),
-            templates(
-                items=[
-                    TemplateItem(
-                        icon="message-circle",
-                        title="Create a Ticket",
-                        description="Create a Jira ticket with priority 'high'",
-                        color="grass",
-                    ),
-                    TemplateItem(
-                        icon="calculator",
-                        title="Search Tickets",
-                        description="Which tickets with priority 'Medium' are in the system?",
-                        color="tomato",
-                    ),
-                ],
-            ),
+            cards(items=items),
             padding_top="2em",
         ),
         padding="2em",
