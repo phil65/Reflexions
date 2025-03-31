@@ -4,8 +4,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-import pydantic
 import reflex as rx
+
+from reflexions.model_form.utils import get_default_value, get_json_schema_extra
 
 from .base import FieldHandler, FieldHandlerRegistry
 
@@ -13,17 +14,11 @@ from .base import FieldHandler, FieldHandlerRegistry
 if TYPE_CHECKING:
     from collections.abc import Callable
 
+    import pydantic
+
 
 class IntHandler(FieldHandler):
     """Handler for integer fields."""
-
-    def __init__(self, *, step: int = 1):
-        """Initialize the handler.
-
-        Args:
-            step: Amount to increment/decrement by in the UI
-        """
-        self.step = step
 
     def supports(
         self, type_annotation: Any, field_info: pydantic.fields.FieldInfo | None = None
@@ -63,7 +58,8 @@ class IntHandler(FieldHandler):
 
         # Field label
         label = field_info.title or field_name.replace("_", " ").capitalize()
-
+        extras = get_json_schema_extra(field_info)
+        step = extras.get("step", 1)
         return rx.vstack(
             rx.hstack(
                 rx.text(label, as_="label", for_=field_name),
@@ -78,7 +74,7 @@ class IntHandler(FieldHandler):
                 value=value,
                 placeholder=field_info.description,
                 on_change=on_change,
-                step=self.step,
+                step=step,
                 min=min_value,
                 max=max_value,
                 border_color=rx.cond(error is not None, "red.500", None),
@@ -105,21 +101,7 @@ class IntHandler(FieldHandler):
         Returns:
             Default value for the field
         """
-        # Check for default value
-        if (
-            field_info.default is not None
-            and field_info.default is not pydantic.fields.PydanticUndefined
-        ):
-            return field_info.default
-
-        # Check for default factory
-        if field_info.default_factory is not None:
-            if field_info.default_factory_takes_validated_data:
-                return field_info.default_factory({})  # type: ignore
-            return field_info.default_factory()  # type: ignore
-
-        # No default defined, use 0 for int
-        return 0
+        return get_default_value(field_info, 0)
 
 
 # Register the handler
