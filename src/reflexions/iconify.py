@@ -8,7 +8,6 @@ from pyconify import svg
 import reflex as rx
 
 
-# Define types for better type hinting
 Rotation = Literal["90", "180", "270", 90, 180, 270, "-90", 1, 2, 3]
 Flip = Literal["horizontal", "vertical", "horizontal,vertical"]
 
