@@ -2,15 +2,12 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, TypeVar
+from collections.abc import Callable  # noqa: TC003
+from typing import Any, TypeVar
 
 import pydantic
 from pydantic import BaseModel
 import reflex as rx
-
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
 
 
 T = TypeVar("T", bound=BaseModel)
@@ -151,10 +148,7 @@ class PydanticFormState(rx.State):
             value: New value for the field
         """
         if self.model:
-            # Update the model field directly
             setattr(self.model, field_name, value)
-
-            # Clear any previous error for this field
             if field_name in self.errors:
                 self.errors.pop(field_name)
 
@@ -171,8 +165,7 @@ class PydanticFormState(rx.State):
             self.model.__class__.model_validate(self.model.model_dump())
             self.errors = {}
         except pydantic.ValidationError as e:
-            # Convert validation errors to field-specific error messages
-            self.errors = {
+            self.errors = {  # pyright: ignore
                 err["loc"][0]: err["msg"]
                 for err in e.errors()
                 if isinstance(err["loc"], tuple) and len(err["loc"]) > 0
@@ -239,14 +232,10 @@ def pydantic_form(
     Returns:
         A Reflex component representing the form
     """
-    # Initialize form state
     form_state = PydanticFormState()
     rx.script(form_state.initialize, model)
-
-    # Set the callback if provided
     if on_submit:
         rx.script(form_state.set_callback, on_submit)
-
     model_class = model if isinstance(model, type) else model.__class__
     fields_to_show = []
     if include_fields:
@@ -267,7 +256,6 @@ def pydantic_form(
         handler = registry.get_handler_for_field(field_info)
 
         if not handler:
-            # Skip fields without handlers
             continue
 
         field_widget = handler.create_widget(
