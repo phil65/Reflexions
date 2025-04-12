@@ -5,7 +5,7 @@ from __future__ import annotations
 import reflex as rx
 import reflex_chakra as rc
 
-from reflexions.cards import TemplateItem, cards
+from reflexions.cards import CardItem, cards
 from reflexions.iconify import iconify
 
 
@@ -14,13 +14,13 @@ INTRO = """
 """
 
 items = [
-    TemplateItem(
+    CardItem(
         icon="message-circle",
         title="Create a Ticket",
         description="Create a Jira ticket with priority 'high'",
         color="grass",
     ),
-    TemplateItem(
+    CardItem(
         icon="calculator",
         title="Search Tickets",
         description="Which tickets with priority 'Medium' are in the system?",

@@ -54,11 +54,11 @@ loading_icon(stroke="#3182CE", speed="0.75")
 
 ### Template Cards
 ```python
-from reflexions import cards, TemplateItem
+from reflexions import cards, CardItem
 
 # Create template cards for selection interfaces
 templates = [
-    TemplateItem(
+    CardItem(
         icon="mdi:web",
         title="Website Template",
         description="Basic website with header and footer",

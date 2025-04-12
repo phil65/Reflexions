@@ -10,7 +10,7 @@ if TYPE_CHECKING:
     from collections.abc import Callable
 
 
-class TemplateItem(BaseModel):
+class CardItem(BaseModel):
     """Represents a template card with all necessary information."""
 
     icon: str
@@ -20,13 +20,13 @@ class TemplateItem(BaseModel):
 
 
 def template_card(
-    item: TemplateItem, on_click: Callable[[TemplateItem], Any] | None = None
+    item: CardItem, on_click: Callable[[CardItem], Any] | None = None
 ) -> rx.Component:
     """Create a template card with the provided click handler.
 
     Args:
         item: The template item data
-        on_click: Function that takes a TemplateItem and returns an event handler
+        on_click: Function that takes a CardItem and returns an event handler
     """
     return rx.el.button(
         rx.icon(tag=item.icon, color=rx.color(item.color, 9), size=16),
@@ -51,8 +51,8 @@ style = rx.Style(
 
 
 def cards(
-    items: list[TemplateItem],
-    on_click: Callable[[TemplateItem], Any] | None = None,
+    items: list[CardItem],
+    on_click: Callable[[CardItem], Any] | None = None,
     cols: int = 4,
 ) -> rx.Component:
     """Create a cards section with custom click handling."""
