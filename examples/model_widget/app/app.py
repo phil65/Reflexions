@@ -5,8 +5,9 @@ from __future__ import annotations
 import reflex as rx
 import reflex_chakra as rc
 
-from reflexions.cards import CardItem, cards
-from reflexions.iconify import iconify
+from reflexions import model_selector
+from reflexions.buttons import menu_button
+from reflexions.cards import CardItem
 
 
 INTRO = """
@@ -42,11 +43,9 @@ def welcome() -> rx.Component:
             margin="0 auto",
             box_shadow="lg",
         ),
-        rc.center(
-            iconify("mdi:chat"),
-            cards(items=items),
-            padding_top="2em",
-        ),
+        # rc.center(iconify("mdi:chat"), cards(items=items), padding_top="2em"),
+        menu_button(),
+        model_selector.model_selector(),
         padding="2em",
     )
 
