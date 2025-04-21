@@ -44,7 +44,7 @@ dependencies = [
 
 [project.optional-dependencies]
 microsoft-login = ["msal"]
-clerk-login = ["reflex-clerk"]
+clerk-login = ["reflex-clerk-api"]
 
 [tool.uv]
 default-groups = ["dev", "lint", "docs"]
