@@ -17,20 +17,16 @@ class SlideContent:
     title: str
     description: str
     content: rx.Component
-
-    # Optional custom height for this specific slide
     height: str | None = None
 
 
-def create_view(
-    slide: SlideContent, index: int, active_index_var: rx.Var
-) -> rx.Component:
+def create_view(slide: SlideContent, index: int, index_var: rx.Var) -> rx.Component:
     """Create a view component for a single slide.
 
     Args:
         slide: The slide content to render
         index: Index of this slide
-        active_index_var: Var reference to the active index
+        index_var: Var reference to the active index
 
     Returns:
         A component representing a slide
@@ -39,8 +35,8 @@ def create_view(
         rx.text(slide.title, size="1", weight="bold"),
         rx.text(slide.description, size="1"),
         slide.content,
-        opacity=rx.cond(active_index_var == index, "1", "0"),
-        transform=f"translateX({(index - active_index_var) * 100}%)",  # pyright: ignore
+        opacity=rx.cond(index_var == index, "1", "0"),
+        transform=f"translateX({(index - index_var) * 100}%)",  # pyright: ignore
         transition="all 400ms ease",
         position="absolute",
         width="100%",
