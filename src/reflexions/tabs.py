@@ -29,48 +29,60 @@ class MultiTabsState(rx.State):
 
 
 class TabGroup:
-    """Represents a group of tabs with Streamlit-like API."""
+    """Represents a group of tabs with Streamlit-like API.
 
-    def __init__(self, flow_instance: ReflexFlow, tab_names: list[str]):
+    Instantiate directly: `my_tabs = TabGroup(["Tab A", "Tab B"])`
+    Then use the context manager:
+    ```python
+    with my_tabs.tab("Tab A") as tab:
+        tab += rx.text("Content") # Use += to add components
+    ```
+    Finally, render it: `my_tabs.render()`
+    """
+
+    def __init__(self, tab_names: list[str]):
         """Initialize a new tab group with a unique ID."""
         self.id = str(uuid.uuid4())
-        self.flow = flow_instance
         self.tab_names: list[str] = tab_names
-        self.tab_contents: dict[str, list[rx.Component]] = {
-            name: [] for name in tab_names
-        }
+        self.tab_contents: dict[str, list[rx.Component]] = {n: [] for n in tab_names}
         self._current_defining_tab: str | None = None
-
-        # Ensure the default active tab exists in the state
         if self.tab_names:
             MultiTabsState.ensure_default_tab(self.id, self.tab_names[0])
 
     @contextmanager
-    def tab(self, tab_name: str) -> Generator[None, None, None]:
-        """Context manager to define content for a specific tab."""
+    def tab(self, tab_name: str) -> Generator[Self, None, None]:
+        """Context manager to define content for a specific tab.
+
+        Yields the TabGroup instance itself.
+        """
         if tab_name not in self.tab_names:
-            msg = f"Tab '{tab_name}' is not defined in this group."
+            msg = f"Tab {tab_name!r} is not defined in this group."
             raise ValueError(msg)
         original_tab = self._current_defining_tab
         self._current_defining_tab = tab_name
-        self.flow._set_current_tab_group(self)
-        yield
+        yield self
         self._current_defining_tab = original_tab
-        self.flow._set_current_tab_group(None)
 
     def add_component(self, component: rx.Component) -> None:
         """Add a component to the tab currently being defined."""
         if self._current_defining_tab is None:
-            msg = "Cannot add component outside of a 'with tab_group.tab(...):' block."
+            msg = "add_component called unexpectedly outside a 'with tab(...):' block context."  # noqa: E501
             raise RuntimeError(msg)
         self.tab_contents[self._current_defining_tab].append(component)
+
+    def __iadd__(self, component: rx.Component) -> Self:
+        """Overload += to add a component to the current tab context."""
+        if not isinstance(component, rx.Component):
+            msg = f"Can only add rx.Component objects using +=, not {type(component).__name__}"  # noqa: E501
+            raise TypeError(msg)
+        self.add_component(component)
+        return self
 
     def render(self) -> rx.Component:
         """Render the tab group as a Reflex component."""
         tab_triggers = []
         group_id_local = self.id
         for name in self.tab_names:
-            # Use default argument capture for the lambda
             trigger = rx.tabs.trigger(
                 name,
                 value=name,
@@ -98,31 +110,4 @@ class TabGroup:
             *tab_panels,
             value=active_tab_value_var,
             default_value=default_value,
-            # on_value_change=...,
         )
-
-
-class ReflexFlow:
-    """Provides a Streamlit-like flow API for Reflex."""
-
-    def __init__(self):
-        self._current_tab_group: TabGroup | None = None
-
-    def _set_current_tab_group(self, tab_group: TabGroup | None):
-        self._current_tab_group = tab_group
-
-    def create_tab_group(self, tab_names: list[str]) -> TabGroup:
-        return TabGroup(self, tab_names)
-
-    def __iadd__(self, component: rx.Component) -> Self:
-        self.add_component(component)
-        return self
-
-    def add_component(self, component: rx.Component):
-        if self._current_tab_group is None:
-            msg = "Component added outside of a 'with tab_group.tab(...):' context."
-            raise RuntimeError(msg)
-        self._current_tab_group.add_component(component)
-
-
-flow = ReflexFlow()

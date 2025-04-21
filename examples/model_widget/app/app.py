@@ -9,6 +9,7 @@ from reflexions import model_selector
 from reflexions.buttons import menu_button
 from reflexions.cards import CardItem
 from reflexions.slider import SlideContent, card_slider
+from reflexions.tabs import TabGroup
 
 
 slides = [
@@ -27,8 +28,8 @@ slides = [
         content=rx.skeleton(width="100%", height="6em", border_radius="6px"),
         height="12em",  # Custom height for this slide
     ),
-    # More slides...
 ]
+
 
 INTRO = """
 # 🤖 Demo-Tool
@@ -53,6 +54,14 @@ items = [
 @rx.page(route="/")
 def welcome() -> rx.Component:
     """Welcome page showing introductory content."""
+    user_tabs = TabGroup(["Profile", "Settings"])
+
+    with user_tabs.tab("Profile") as tab:
+        tab += rx.heading("User Profile")
+        tab += rx.text("Your profile information")
+        tab += rx.button("Edit Profile")
+    with user_tabs.tab("Settings") as tab:
+        tab += rx.heading("2nd tab")
     return rc.container(
         rc.box(
             rx.markdown(INTRO),
@@ -67,6 +76,7 @@ def welcome() -> rx.Component:
         menu_button(),
         card_slider(slides),
         model_selector.model_selector(),
+        user_tabs.render(),
         padding="2em",
     )
 
