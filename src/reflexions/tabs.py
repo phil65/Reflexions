@@ -1,14 +1,14 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
-from typing import TYPE_CHECKING, Any, Self
+from typing import TYPE_CHECKING, Self
 import uuid
 
 import reflex as rx
 
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Generator
+    from collections.abc import Generator
 
 
 class MultiTabsState(rx.State):
@@ -96,10 +96,8 @@ class TabGroup:
         return rx.tabs.root(
             rx.tabs.list(*tab_triggers),
             *tab_panels,
-            # Keep value bound to state
             value=active_tab_value_var,
             default_value=default_value,
-            # REMOVE the invalid on_value_change
             # on_value_change=...,
         )
 
@@ -125,18 +123,6 @@ class ReflexFlow:
             msg = "Component added outside of a 'with tab_group.tab(...):' context."
             raise RuntimeError(msg)
         self._current_tab_group.add_component(component)
-
-    def text(self, content: str) -> None:
-        self.add_component(rx.text(content))
-
-    def heading(self, content: str, level: int = 1) -> None:
-        self.add_component(rx.heading(content, size=str(level)))  # type: ignore
-
-    def button(self, label: str, on_click: Callable[[], Any] | None = None) -> None:
-        self.add_component(rx.button(label, on_click=on_click))
-
-    def image(self, src: str, alt: str = "") -> None:
-        self.add_component(rx.image(src=src, alt=alt))
 
 
 flow = ReflexFlow()
