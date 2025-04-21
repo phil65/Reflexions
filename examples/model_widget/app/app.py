@@ -8,7 +8,27 @@ import reflex_chakra as rc
 from reflexions import model_selector
 from reflexions.buttons import menu_button
 from reflexions.cards import CardItem
+from reflexions.slider import SlideContent, card_slider
 
+
+slides = [
+    SlideContent(
+        title="Step One",
+        description="First step description",
+        content=rx.vstack(
+            rx.skeleton(width="45%", height="0.75em", border_radius="6px"),
+            rx.skeleton(width="55%", height="0.75em", border_radius="6px"),
+            width="100%",
+        ),
+    ),
+    SlideContent(
+        title="Step Two",
+        description="Second step description",
+        content=rx.skeleton(width="100%", height="6em", border_radius="6px"),
+        height="12em",  # Custom height for this slide
+    ),
+    # More slides...
+]
 
 INTRO = """
 # 🤖 Demo-Tool
@@ -45,6 +65,7 @@ def welcome() -> rx.Component:
         ),
         # rc.center(iconify("mdi:chat"), cards(items=items), padding_top="2em"),
         menu_button(),
+        card_slider(slides),
         model_selector.model_selector(),
         padding="2em",
     )
