@@ -48,7 +48,7 @@ def logout_page() -> rx.Component:
 # --- Setup Function ---
 
 
-def add_azure_auth_routes(app: rx.App) -> None:
+def add_azure_auth_routes(app: rx.App):
     """Registers the necessary Azure AD callback and logout pages with the Reflex app.
 
     Call this function after creating your `rx.App` instance.

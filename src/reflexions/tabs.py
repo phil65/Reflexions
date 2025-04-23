@@ -17,7 +17,7 @@ class MultiTabsState(rx.State):
     active_tabs: dict[str, str] = {}
 
     @rx.event
-    def switch_tab(self, group_id: str, tab_id: str) -> None:
+    def switch_tab(self, group_id: str, tab_id: str):
         """Switch the active tab for a specific tab group."""
         self.active_tabs[group_id] = tab_id
 
@@ -63,7 +63,7 @@ class TabGroup:
         yield self
         self._current_defining_tab = original_tab
 
-    def add_component(self, component: rx.Component) -> None:
+    def add_component(self, component: rx.Component):
         """Add a component to the tab currently being defined."""
         if self._current_defining_tab is None:
             msg = "add_component called unexpectedly outside a 'with tab(...):' block context."  # noqa: E501

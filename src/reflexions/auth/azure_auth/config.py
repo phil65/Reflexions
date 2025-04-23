@@ -96,7 +96,7 @@ def configure_azure_auth(
     post_logout_redirect_uri: str | None = None,
     logout_route: str | None = None,
     callback_route: str | None = None,
-) -> None:
+):
     """Overrides Azure AD authentication settings loaded from environment variables.
 
     Call this function during application setup if you need to provide

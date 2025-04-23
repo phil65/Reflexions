@@ -71,7 +71,7 @@ class FieldHandlerRegistry:
         """Initialize an empty registry."""
         self._handlers: list[FieldHandler] = []
 
-    def register(self, handler: FieldHandler) -> None:
+    def register(self, handler: FieldHandler):
         """Register a field handler."""
         self._handlers.append(handler)
 
@@ -96,7 +96,7 @@ class PydanticFormState(rx.State):
     """State for the Pydantic form component."""
 
     model: BaseModel | None = None
-    errors: dict[str, str] = {}  # noqa: RUF012
+    errors: dict[str, str] = {}
     submitting: bool = False
     submitted: bool = False
     _on_submit_callback: Callable[[BaseModel], None] | None = None
@@ -109,7 +109,7 @@ class PydanticFormState(rx.State):
         self.submitted = False
         self._on_submit_callback = None
 
-    def initialize(self, model_or_class: type[BaseModel] | BaseModel) -> None:
+    def initialize(self, model_or_class: type[BaseModel] | BaseModel):
         """Initialize form state with a model.
 
         Args:
@@ -123,7 +123,7 @@ class PydanticFormState(rx.State):
             self.model = model_or_class
 
     @rx.event
-    def set_callback(self, callback: Callable[[BaseModel], None]) -> None:
+    def set_callback(self, callback: Callable[[BaseModel], None]):
         """Set the submission callback."""
         self._on_submit_callback = callback
 
@@ -140,7 +140,7 @@ class PydanticFormState(rx.State):
         self.submitting = False
 
     @rx.event
-    def update_field(self, field_name: str, value: Any) -> None:
+    def update_field(self, field_name: str, value: Any):
         """Update a single field in the model.
 
         Args:
