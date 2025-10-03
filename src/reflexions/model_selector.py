@@ -3,11 +3,15 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Sequence  # noqa: TC003
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import reflex as rx
 import reflex_chakra as rc
-from tokonomics.model_discovery import ModelInfo, ProviderType, get_all_models
+from tokonomics.model_discovery import get_all_models
+
+
+if TYPE_CHECKING:
+    from tokonomics.model_discovery import ModelInfo, ProviderType
 
 
 ModelName = str
