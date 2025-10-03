@@ -66,7 +66,7 @@ class ModelSelectorState(rx.State):
         providers: Sequence[ProviderType] | None = None,
         expanded: bool = True,
         on_model_change_callback: Callable[[str], None] | None = None,
-    ) -> None:
+    ):
         """Load models asynchronously and initialize state."""
         if self.is_loading:
             return
@@ -146,7 +146,7 @@ class ModelSelectorState(rx.State):
             async with self:
                 self.is_loading = False
 
-    def on_provider_change(self, provider: str) -> None:
+    def on_provider_change(self, provider: str):
         """Handle provider change."""
         # Corrected formatting
         self.selected_provider = provider
@@ -165,7 +165,7 @@ class ModelSelectorState(rx.State):
         if selected_model_id and self._external_on_model_change:
             self._external_on_model_change(selected_model_id)
 
-    def on_model_change(self, model_name: str) -> None:
+    def on_model_change(self, model_name: str):
         """Handle model change."""
         # Corrected formatting
         self.selected_model_name = model_name
@@ -174,18 +174,18 @@ class ModelSelectorState(rx.State):
         if self.selected_model and self._external_on_model_change:
             self._external_on_model_change(self.selected_model.pydantic_ai_id)
 
-    def toggle_expanded(self) -> None:
+    def toggle_expanded(self):
         """Toggle expanded state."""
         self.is_expanded = not self.is_expanded
 
-    def _update_provider_models(self) -> None:
+    def _update_provider_models(self):
         """Update models based on selected provider."""
         self.provider_models = [
             m for m in self.models if m.provider == self.selected_provider
         ]
         self.model_names = sorted([m.name for m in self.provider_models])
 
-    def _update_selected_model(self) -> None:
+    def _update_selected_model(self):
         """Update selected model based on selected name."""
         self.selected_model = next(
             (m for m in self.provider_models if m.name == self.selected_model_name), None
